@@ -33,7 +33,7 @@
 
             th, td {
                 text-align: left;
-                padding: 16px;
+                padding: .7rem;
             }
 
             tr:nth-child(even) {
@@ -42,45 +42,49 @@
         </style>
     </head>
     <body>
-
-        <h2>Tables Side by Side</h2>
-        <p>How to create side-by-side tables with CSS:</p>
-
         <div class="row">
             <div class="column">
                 <table>
-                <tr>
-                    <th>OR</th>
-                    {% for row in rows %}
-                        <th>{{row}}</th>
+                    <tr>
+                        <th>OR</th>
+                        {% for row in rows %}
+                            <th>{{row}}</th>
+                        {% endfor %}
+                    </tr>
+                    {% for idx in range(0, middle) %}
+                        <tr>
+                            <td>{{idx + 1}}</td>
+                            <td>{{rushees[idx][0]}}</td>
+                            <td>{{rushees[idx][1]}}</td>
+                            <td>{{rushees[idx][2]}}</td>
+                            <td>{{rushees[idx][3]}}</td>
+                            <td>{{rushees[idx][4]}}</td>
+                            <td>{{rushees[idx][5]}}</td>
+                            <td>{{rushees[idx][6]}}</td>
+                        </tr>
                     {% endfor %}
-                </tr>
-                {% for idx in range(25) %}
-                <tr>
-                    <td>{{idx}}</td>
-                    {% for row in rows %}
-                        <td> {{rushees[idx].dict()[row]}} </td>
-                    {% endfor %}
-                </tr>
-                {% endfor %}
                 </table>
             </div>
             <div class="column">
                 <table>
-                <tr>
-                    <th>OR</th>
-                    {% for row in rows %}
-                        <th>{{row}}</th>
+                    <tr>
+                        <th>OR</th>
+                        {% for row in rows %}
+                            <th>{{row}}</th>
+                        {% endfor %}
+                    </tr>
+                    {% for idx in range(middle, rushees|length) %}
+                        <tr>
+                            <td>{{idx + 1}}</td>
+                            <td>{{rushees[idx][0]}}</td>
+                            <td>{{rushees[idx][1]}}</td>
+                            <td>{{rushees[idx][2]}}</td>
+                            <td>{{rushees[idx][3]}}</td>
+                            <td>{{rushees[idx][4]}}</td>
+                            <td>{{rushees[idx][5]}}</td>
+                            <td>{{rushees[idx][6]}}</td>
+                        </tr>
                     {% endfor %}
-                </tr>
-                {% for idx in range(25, 50) %}
-                <tr>
-                    <td>{{idx}}</td>
-                    {% for row in rows %}
-                        <td> {{rushees[idx].dict()[row]}} </td>
-                    {% endfor %}
-                </tr>
-                {% endfor %}
                 </table>
             </div>
         </div>

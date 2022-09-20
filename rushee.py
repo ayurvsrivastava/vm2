@@ -9,3 +9,4 @@ class Rushee(BaseModel):
     ii_score: str
     bhs_score: int
     total_score: float
+    strike: int
