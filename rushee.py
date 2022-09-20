@@ -8,3 +8,4 @@ class Rushee(BaseModel):
     gi_score: float
     ii_score: str
     bhs_score: int
+    total_score: float
