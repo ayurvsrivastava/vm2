@@ -1,37 +1,44 @@
 * {
     box-sizing: border-box;
-  }
-  
-  .row {
+}
+
+.row {
     margin-left:-5px;
     margin-right:-5px;
-  }
-    
-  .column {
+}
+
+.column {
     float: left;
     width: 50%;
     padding: 5px;
-  }
-  
-  /* Clearfix (clear floats) */
-  .row::after {
+}
+
+/* Clearfix (clear floats) */
+.row::after {
     content: "";
     clear: both;
     display: table;
-  }
-  
-  table {
+}
+
+table {
     border-collapse: collapse;
     border-spacing: 0;
     width: 100%;
     border: 1px solid #ddd;
-  }
-  
-  th, td {
+}
+
+th, td {
     text-align: left;
-    padding: 16px;
-  }
-  
-  tr:nth-child(even) {
-    background-color: #f2f2f2;
-  }
+    padding: .7rem;
+}
+
+.strike1 {
+    background-color: #c0c0c0;
+    font-weight: bold;
+}
+.strike2 {
+    background-color: #3d3d3d;
+    font-weight: bold;
+    /* set text color to white */
+    color: #fff;
+}

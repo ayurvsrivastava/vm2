@@ -1,45 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <style>
-            * {
-                box-sizing: border-box;
-            }
-
-            .row {
-                margin-left:-5px;
-                margin-right:-5px;
-            }
-
-            .column {
-                float: left;
-                width: 50%;
-                padding: 5px;
-            }
-
-            /* Clearfix (clear floats) */
-            .row::after {
-                content: "";
-                clear: both;
-                display: table;
-            }
-
-            table {
-                border-collapse: collapse;
-                border-spacing: 0;
-                width: 100%;
-                border: 1px solid #ddd;
-            }
-
-            th, td {
-                text-align: left;
-                padding: .7rem;
-            }
-
-            tr:nth-child(even) {
-                background-color: #f2f2f2;
-            }
-        </style>
+        <link rel="stylesheet" href="/static/css/style.css">
     </head>
     <body>
         <div class="row">
@@ -51,17 +13,41 @@
                             <th>{{row}}</th>
                         {% endfor %}
                     </tr>
-                    {% for idx in range(0, middle) %}
+                    {% for idx, row in rushees1.iterrows() %}
+                        {% if row["Strikes"]["val"] == 0 %}
                         <tr>
                             <td>{{idx + 1}}</td>
-                            <td>{{rushees[idx][0]}}</td>
-                            <td>{{rushees[idx][1]}}</td>
-                            <td>{{rushees[idx][2]}}</td>
-                            <td>{{rushees[idx][3]}}</td>
-                            <td>{{rushees[idx][4]}}</td>
-                            <td>{{rushees[idx][5]}}</td>
-                            <td>{{rushees[idx][6]}}</td>
+                            {% for col in row[:remove] %}
+                                {% if col is mapping %}
+                                    <td style="background-color: {{col["color"]}};">{{col["val"]}}</td>
+                                {% else %}
+                                    <td>{{col}}</td>
+                                {% endif %}
+                            {% endfor %}
                         </tr>
+                        {% elif row["Strikes"]["val"] == 1 %}
+                        <tr>
+                            <td>{{idx + 1}}</td>
+                            {% for col in row[:remove] %}
+                                {% if col is mapping %}
+                                    <td style="background-color: {{col["color"]}};">{{col["val"]}}</td>
+                                {% else %}
+                                    <td class="strike1">{{col}}</td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td>{{idx + 1}}</td>
+                            {% for col in row[:remove] %}
+                                {% if col is mapping %}
+                                    <td style="background-color: {{col["color"]}};">{{col["val"]}}</td>
+                                {% else %}
+                                    <td class="strike2">{{col}}</td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        {% endif %}
                     {% endfor %}
                 </table>
             </div>
@@ -73,17 +59,41 @@
                             <th>{{row}}</th>
                         {% endfor %}
                     </tr>
-                    {% for idx in range(middle, rushees|length) %}
+                    {% for idx, row in rushees2.iterrows() %}
+                        {% if row["Strikes"]["val"] == 0 %}
                         <tr>
                             <td>{{idx + 1}}</td>
-                            <td>{{rushees[idx][0]}}</td>
-                            <td>{{rushees[idx][1]}}</td>
-                            <td>{{rushees[idx][2]}}</td>
-                            <td>{{rushees[idx][3]}}</td>
-                            <td>{{rushees[idx][4]}}</td>
-                            <td>{{rushees[idx][5]}}</td>
-                            <td>{{rushees[idx][6]}}</td>
+                            {% for col in row[:remove] %}
+                                {% if col is mapping %}
+                                    <td style="background-color: {{col["color"]}};">{{col["val"]}}</td>
+                                {% else %}
+                                    <td>{{col}}</td>
+                                {% endif %}
+                            {% endfor %}
                         </tr>
+                        {% elif row["Strikes"]["val"] == 1 %}
+                        <tr class="strike1">
+                            <td>{{idx + 1}}</td>
+                            {% for col in row[:remove] %}
+                                {% if col is mapping %}
+                                    <td style="background-color: {{col["color"]}};">{{col["val"]}}</td>
+                                {% else %}
+                                    <td>{{col}}</td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        {% else %}
+                        <tr class="strike2">
+                            <td>{{idx + 1}}</td>
+                            {% for col in row[:remove] %}
+                                {% if col is mapping %}
+                                    <td style="background-color: {{col["color"]}};">{{col["val"]}}</td>
+                                {% else %}
+                                    <td>{{col}}</td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        {% endif %}
                     {% endfor %}
                 </table>
             </div>
@@ -101,5 +111,7 @@
             <input name="optional" type="text" value="" placeholder="Optional Rushee or Location">
             <input type="submit" value="Submit" />
         </form>
+
+
     </body>
 </html>
