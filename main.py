@@ -22,11 +22,21 @@ def swap(Rushee1, Rushee2):
             r1_idx = index
         if row['OR'] == Rushee2:
             r2_idx = index
+            
+    #ERROR CHECKING
+    if (df.iloc[r1_idx]['Strikes']["val"] == 2):
+        print(f"Rushee {df.iloc[r1_idx]['Full Name']} is locked")
+        return False
+    if (df.iloc[r2_idx]['Strikes']["val"] == 2):
+        print(f"Rushee {df.iloc[r2_idx]['Full Name']} is locked")
+        return False
+    
     #swap the ranks of rushee1 and rushee2
     row1, row2 = df.iloc[r1_idx], df.iloc[r2_idx]
     temp = row1.copy()
     df.iloc[r1_idx] = row2
     df.iloc[r2_idx] = temp
+    return True
     
 def drop(Rushee1, location):
     global df
@@ -43,6 +53,17 @@ def drop(Rushee1, location):
     df_indices = [i for i in range(len(df))]
     dropping_to = location - 1
 
+    #ERROR CHECKING
+    if (dropping_to <= r1_idx):
+        print(f"Cannot drop to a higher position")
+        return False
+    if (df.iloc[r1_idx]['Strikes']["val"] >= 2):
+        print(f"Rushee {df.iloc[r1_idx]['Full Name']} is locked")
+        return False
+    if (df.iloc[dropping_to]['Strikes']["val"] >= 2):
+        print(f"Position {location} is locked")
+        return False
+    
     #everybody below rushee
     for idx in range(location, len(df)):
         if idx in temp_df_indices:
@@ -68,6 +89,7 @@ def drop(Rushee1, location):
         temp_df.iloc[temp_idx] = df.iloc[df_idx]
     
     df = temp_df
+    return True
     
 def jump(Rushee1, location):
     global df
@@ -85,6 +107,18 @@ def jump(Rushee1, location):
     
 
     jumping_to = location - 1
+    
+    #ERROR CHECKING
+    if (jumping_to >= r1_idx):
+        print(f"Cannot jump to a lower position")
+        return False
+    if (df.iloc[r1_idx]['Strikes']["val"] == 2):
+        print(f"Rushee {df.iloc[r1_idx]['Full Name']} is locked")
+        return False
+    if (df.iloc[jumping_to]['Strikes']["val"] == 2):
+        print(f"Position {location} is locked")
+        return False
+    
     #everybody above location
     for idx in range(0, jumping_to):
         temp_df.iloc[idx] = df.iloc[idx]
@@ -109,6 +143,7 @@ def jump(Rushee1, location):
         temp_df.iloc[temp_idx] = df.iloc[df_idx]
     
     df = temp_df   
+    return True
 
 
 def strike(Rushee1):
@@ -188,15 +223,15 @@ def index():
             return render_template("vm2.html", rows=row, rushees1=rushees_top, rushees2=rushees_bottom, middle=middle, remove= -1 * remove)
         else:
             if request.form["motion"] == "swap":
-                swap(int(request.form["rushee1"]), int(request.form["optional"]))
-                strike(int(request.form["rushee1"]))
-                strike(int(request.form["optional"]))
+                if swap(int(request.form["rushee1"]), int(request.form["optional"])):
+                    strike(int(request.form["rushee1"]))
+                    strike(int(request.form["optional"]))
             if request.form["motion"] == "drop":
-                drop(int(request.form["rushee1"]), int(request.form["optional"]))
-                strike(int(request.form["rushee1"]))
+                if drop(int(request.form["rushee1"]), int(request.form["optional"])):
+                    strike(int(request.form["rushee1"]))
             if request.form["motion"] == "jump":
-                jump(int(request.form["rushee1"]), int(request.form["optional"]))
-                strike(int(request.form["rushee1"]))
+                if jump(int(request.form["rushee1"]), int(request.form["optional"])):
+                    strike(int(request.form["rushee1"]))
             if request.form["motion"] == "strike":
                 strike(int(request.form["rushee1"]))
             if request.form["motion"] == "lock":
