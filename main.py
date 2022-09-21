@@ -11,6 +11,9 @@ middle = 0
 row = []
 color_gradient = []
 remove = 1
+genuine = 0
+glue = 0
+benefit = 0
 
 def swap(Rushee1, Rushee2):
     global df
@@ -22,21 +25,11 @@ def swap(Rushee1, Rushee2):
             r1_idx = index
         if row['OR'] == Rushee2:
             r2_idx = index
-            
-    #ERROR CHECKING
-    if (df.iloc[r1_idx]['Strikes']["val"] == 2):
-        print(f"Rushee {df.iloc[r1_idx]['Full Name']} is locked")
-        return False
-    if (df.iloc[r2_idx]['Strikes']["val"] == 2):
-        print(f"Rushee {df.iloc[r2_idx]['Full Name']} is locked")
-        return False
-    
     #swap the ranks of rushee1 and rushee2
     row1, row2 = df.iloc[r1_idx], df.iloc[r2_idx]
     temp = row1.copy()
     df.iloc[r1_idx] = row2
     df.iloc[r2_idx] = temp
-    return True
     
 def drop(Rushee1, location):
     global df
@@ -53,17 +46,6 @@ def drop(Rushee1, location):
     df_indices = [i for i in range(len(df))]
     dropping_to = location - 1
 
-    #ERROR CHECKING
-    if (dropping_to <= r1_idx):
-        print(f"Cannot drop to a higher position")
-        return False
-    if (df.iloc[r1_idx]['Strikes']["val"] >= 2):
-        print(f"Rushee {df.iloc[r1_idx]['Full Name']} is locked")
-        return False
-    if (df.iloc[dropping_to]['Strikes']["val"] >= 2):
-        print(f"Position {location} is locked")
-        return False
-    
     #everybody below rushee
     for idx in range(location, len(df)):
         if idx in temp_df_indices:
@@ -89,7 +71,6 @@ def drop(Rushee1, location):
         temp_df.iloc[temp_idx] = df.iloc[df_idx]
     
     df = temp_df
-    return True
     
 def jump(Rushee1, location):
     global df
@@ -107,18 +88,6 @@ def jump(Rushee1, location):
     
 
     jumping_to = location - 1
-    
-    #ERROR CHECKING
-    if (jumping_to >= r1_idx):
-        print(f"Cannot jump to a lower position")
-        return False
-    if (df.iloc[r1_idx]['Strikes']["val"] == 2):
-        print(f"Rushee {df.iloc[r1_idx]['Full Name']} is locked")
-        return False
-    if (df.iloc[jumping_to]['Strikes']["val"] == 2):
-        print(f"Position {location} is locked")
-        return False
-    
     #everybody above location
     for idx in range(0, jumping_to):
         temp_df.iloc[idx] = df.iloc[idx]
@@ -143,7 +112,6 @@ def jump(Rushee1, location):
         temp_df.iloc[temp_idx] = df.iloc[df_idx]
     
     df = temp_df   
-    return True
 
 
 def strike(Rushee1):
@@ -173,6 +141,9 @@ def index():
     global row
     global color_gradient
     global remove
+    global genuine
+    global glue
+    global benefit
     if request.method == "GET":
         return render_template("index.html")
     if request.method == "POST":
@@ -220,18 +191,18 @@ def index():
             middle = int(len(df.values) / 2)
             rushees_top = df.iloc[:middle]
             rushees_bottom = df.iloc[middle:]
-            return render_template("vm2.html", rows=row, rushees1=rushees_top, rushees2=rushees_bottom, middle=middle, remove= -1 * remove)
+            return render_template("vm2.html", rows=row, rushees1=rushees_top, rushees2=rushees_bottom, middle=middle, remove= -1 * remove, )
         else:
             if request.form["motion"] == "swap":
-                if swap(int(request.form["rushee1"]), int(request.form["optional"])):
-                    strike(int(request.form["rushee1"]))
-                    strike(int(request.form["optional"]))
+                swap(int(request.form["rushee1"]), int(request.form["optional"]))
+                strike(int(request.form["rushee1"]))
+                strike(int(request.form["optional"]))
             if request.form["motion"] == "drop":
-                if drop(int(request.form["rushee1"]), int(request.form["optional"])):
-                    strike(int(request.form["rushee1"]))
+                drop(int(request.form["rushee1"]), int(request.form["optional"]))
+                strike(int(request.form["rushee1"]))
             if request.form["motion"] == "jump":
-                if jump(int(request.form["rushee1"]), int(request.form["optional"])):
-                    strike(int(request.form["rushee1"]))
+                jump(int(request.form["rushee1"]), int(request.form["optional"]))
+                strike(int(request.form["rushee1"]))
             if request.form["motion"] == "strike":
                 strike(int(request.form["rushee1"]))
             if request.form["motion"] == "lock":
@@ -288,10 +259,20 @@ def index():
                 # add middle to the beginning of df
                 df = pd.concat([middle, df], axis=1)
 
+            if request.form["motion"] == "genuine":
+                genuine += 1
+            
+            if request.form["motion"] == "glue":
+                glue += 1
+            
+            if request.form["motion"] == "would":
+                benefit += 1
+
             middle = int(len(df.values) / 2)
             rushees_top = df.iloc[:middle]
             rushees_bottom = df.iloc[middle:]
-            return render_template("vm2.html", rows=row, rushees1=rushees_top, rushees2=rushees_bottom, middle=middle, remove= -1 * remove)
+            return render_template("vm2.html", rows=row, rushees1=rushees_top, rushees2=rushees_bottom, middle=middle, remove= -1 * remove, genuine=genuine,
+                glue=glue, benefit=benefit)
 
 
 if __name__ == '__main__':
