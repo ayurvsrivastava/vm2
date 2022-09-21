@@ -293,16 +293,16 @@ def index():
                 # add middle to the beginning of df
                 df = pd.concat([middle, df], axis=1)
 
-            if request.form["counter"] == "genuine":
+            if request.form["motion"] == "genuine":
                 genuine += 1
             
-            if request.form["counter"] == "glue":
+            if request.form["motion"] == "glue":
                 glue += 1
             
-            if request.form["counter"] == "would":
+            if request.form["motion"] == "would":
                 benefit += 1
 
-            if request.form["counter"] == "mid":
+            if request.form["motion"] == "mid":
                 mid += 1
             middle = int(len(df.values) / 2)
             rushees_top = df.iloc[:middle]
