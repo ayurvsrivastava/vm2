@@ -188,9 +188,9 @@ def index():
             return render_template("vm2.html", rows=row, rushees1=rushees_top, rushees2=rushees_bottom, middle=middle, remove= -1 * remove)
         else:
             if request.form["motion"] == "swap":
+                swap(int(request.form["rushee1"]), int(request.form["optional"]))
                 strike(int(request.form["rushee1"]))
                 strike(int(request.form["optional"]))
-                swap(int(request.form["rushee1"]), int(request.form["optional"]))
             if request.form["motion"] == "drop":
                 drop(int(request.form["rushee1"]), int(request.form["optional"]))
                 strike(int(request.form["rushee1"]))
