@@ -14,6 +14,7 @@ remove = 1
 genuine = 0
 glue = 0
 benefit = 0
+mid = 0
 
 def swap(Rushee1, Rushee2):
     global df
@@ -175,6 +176,7 @@ def index():
     global genuine
     global glue
     global benefit
+    global mid
     if request.method == "GET":
         return render_template("index.html")
     if request.method == "POST":
@@ -222,7 +224,8 @@ def index():
             middle = int(len(df.values) / 2)
             rushees_top = df.iloc[:middle]
             rushees_bottom = df.iloc[middle:]
-            return render_template("vm2.html", rows=row, rushees1=rushees_top, rushees2=rushees_bottom, middle=middle, remove= -1 * remove, )
+            return render_template("vm2.html", rows=row, rushees1=rushees_top, rushees2=rushees_bottom, middle=middle, remove= -1 * remove, genuine=genuine,
+                glue=glue, benefit=benefit, mid=mid)
         else:
             if request.form["motion"] == "swap":
                 if swap(int(request.form["rushee1"]), int(request.form["optional"])):
@@ -290,20 +293,22 @@ def index():
                 # add middle to the beginning of df
                 df = pd.concat([middle, df], axis=1)
 
-            if request.form["motion"] == "genuine":
+            if request.form["counter"] == "genuine":
                 genuine += 1
             
-            if request.form["motion"] == "glue":
+            if request.form["counter"] == "glue":
                 glue += 1
             
-            if request.form["motion"] == "would":
+            if request.form["counter"] == "would":
                 benefit += 1
 
+            if request.form["counter"] == "mid":
+                mid += 1
             middle = int(len(df.values) / 2)
             rushees_top = df.iloc[:middle]
             rushees_bottom = df.iloc[middle:]
             return render_template("vm2.html", rows=row, rushees1=rushees_top, rushees2=rushees_bottom, middle=middle, remove= -1 * remove, genuine=genuine,
-                glue=glue, benefit=benefit)
+                glue=glue, benefit=benefit, mid=mid)
 
 
 if __name__ == '__main__':
