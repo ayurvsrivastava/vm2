@@ -11,10 +11,6 @@ middle = 0
 row = []
 color_gradient = []
 remove = 1
-genuine = 0
-glue = 0
-benefit = 0
-mid = 0
 
 def swap(Rushee1, Rushee2):
     global df
@@ -154,10 +150,25 @@ def strike(Rushee1):
             r1_idx = index
     df.at[r1_idx, 'Strikes']["val"] += 1
 
-def lock_pc(size):
+def lock_rushee(Rushee1):
     global df
-    for idx in range(0, size):
-        df.at[idx, 'Strikes']["val"] = 2
+    r1_idx = -1
+    for index, row in df.iterrows():
+        if row['OR'] == Rushee1:
+            r1_idx = index
+    df.at[r1_idx, 'Strikes']["val"] =2
+
+def lock_range(Rushee1, Rushee2):
+    global df
+    r1_idx = -1
+    r2_idx = -1
+    for index, row in df.iterrows():
+        if row['OR'] == Rushee1:
+            r1_idx = index
+        if row['OR'] == Rushee2:
+            r2_idx = index
+    for i in range(r1_idx, r2_idx+1):
+        df.at[i, 'Strikes']["val"] =2
     
 def save():
     global df
@@ -224,8 +235,7 @@ def index():
             middle = int(len(df.values) / 2)
             rushees_top = df.iloc[:middle]
             rushees_bottom = df.iloc[middle:]
-            return render_template("vm2.html", rows=row, rushees1=rushees_top, rushees2=rushees_bottom, middle=middle, remove= -1 * remove, genuine=genuine,
-                glue=glue, benefit=benefit, mid=mid)
+            return render_template("vm2.html", rows=row, rushees1=rushees_top, rushees2=rushees_bottom, middle=middle, remove= -1 * remove)
         else:
             if request.form["motion"] == "swap":
                 if swap(int(request.form["rushee1"]), int(request.form["optional"])):
@@ -239,8 +249,10 @@ def index():
                     strike(int(request.form["rushee1"]))
             if request.form["motion"] == "strike":
                 strike(int(request.form["rushee1"]))
-            if request.form["motion"] == "lock":
-                lock_pc(int(request.form["rushee1"]))
+            if request.form["motion"] == "lock" and request.form["optional"] == "":
+                lock_rushee(int(request.form["rushee1"]))
+            if request.form["motion"] == "lock" and request.form["optional"] != "":
+                lock_range(int(request.form["rushee1"]), int(request.form["optional"]))
             if request.form["motion"] == "save":
                 # store columns 0 and 1 and the last column in a dataframe
                 middle_val = df.iloc[:, 0:3]
@@ -307,8 +319,7 @@ def index():
             middle = int(len(df.values) / 2)
             rushees_top = df.iloc[:middle]
             rushees_bottom = df.iloc[middle:]
-            return render_template("vm2.html", rows=row, rushees1=rushees_top, rushees2=rushees_bottom, middle=middle, remove= -1 * remove, genuine=genuine,
-                glue=glue, benefit=benefit, mid=mid)
+            return render_template("vm2.html", rows=row, rushees1=rushees_top, rushees2=rushees_bottom, middle=middle, remove= -1 * remove)
 
 
 if __name__ == '__main__':
