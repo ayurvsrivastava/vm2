@@ -42,7 +42,7 @@ def drop(Rushee1, location):
     # create an empty dataframe with the same columns as df
     temp_df = pd.DataFrame(columns=df.columns)
     # add len(df) blank rows to temp_df
-    temp_df = temp_df.append([{} for i in range(len(df))], ignore_index=True)
+    temp_df = pd.concat([temp_df, pd.DataFrame([{} for i in range(len(df))])], ignore_index=True)
     r1_idx = -1
     for index, row in df.iterrows():
         if row['OR'] == Rushee1:
@@ -94,7 +94,7 @@ def jump(Rushee1, location):
     # create an empty dataframe with the same columns as df
     temp_df = pd.DataFrame(columns=df.columns)
     # add len(df) blank rows to temp_df
-    temp_df = temp_df.append([{} for i in range(len(df))], ignore_index=True)
+    temp_df = pd.concat([temp_df, pd.DataFrame([{} for i in range(len(df))])], ignore_index=True)
     r1_idx = -1
     for index, row in df.iterrows():
         if row['OR'] == Rushee1:
